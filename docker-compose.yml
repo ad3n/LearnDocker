@@ -1,0 +1,24 @@
+server:
+    image: nginx:latest
+    ports:
+        - "8080:80"
+    volumes:
+        - ./web:/home/site/web
+        - ./nginx/sites-enabled/site.conf:/etc/nginx/conf.d/default.conf
+        - ./nginx/sites-enabled/php-fpm.conf:/etc/nginx/conf.d/php-fpm.conf
+        - ./nginx/fastcgi_cache:/etc/nginx/fastcgi_cache
+        - ./nginx/static_files.conf:/etc/nginx/static_files.conf
+    links:
+        - php
+        - database
+php:
+    image: php:7.1.1-fpm
+    volumes:
+        - ./web:/home/site/web
+database:
+    image: mariadb:latest
+    environment:
+        MYSQL_ROOT_PASSWORD: aden
+        MYSQL_DATABASE: aden
+        MYSQL_USER: aden
+        MYSQL_PASSWORD: aden
