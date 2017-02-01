@@ -102,10 +102,6 @@ sub vcl_recv {
         return (pass);
     }
 
-    if (req.url ~ "(shopping|auction|checkout|account|login|logout|api|instagram)") {
-        return (pass);
-    }
-
     # Some generic URL manipulation, useful for all templates that follow
     # First remove the Google Analytics added parameters, useless for our backend
     if (req.url ~ "(\?|&)(utm_source|utm_medium|utm_campaign|utm_content|gclid|cx|ie|cof|siteurl)=") {
