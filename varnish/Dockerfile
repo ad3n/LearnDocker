@@ -10,9 +10,10 @@ RUN mkdir /home/site && mkdir /home/site/cache
 RUN apt-get install -y varnish
 
 # Setting Configurations
-ENV VCL_CONFIG      /etc/varnish/default.vcl
+ENV VARNISH_CONFIG  /etc/varnish/default.vcl
 ENV CACHE_SIZE      128m
 ENV VARNISHD_PARAMS -p default_ttl=3600 -p default_grace=3600
+ENV VARNISH_PORT    6081
 
 ADD start.sh /etc/varnish/start.sh
 

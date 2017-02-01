@@ -1,39 +1,66 @@
-proxy:
-    build: ./varnish
-    ports:
-        - "8080:80"
-    volumes:
-        - ./varnish/default.vcl:/etc/varnish/default.vcl
-    environment:
-        - VCL_CONFIG=/etc/varnish/default.vcl
-        - CACHE_SIZE=128m
-        - VARNISHD_PARAMS=-p default_ttl=3600 -p default_grace=3600
-    links:
-        - server
+version: '2'
+services:
+    balancer:
+        build: ./haproxy
+        ports:
+            - 80:80
+        links:
+            - proxy
+        networks:
+            - frontend
 
-server:
-    build: ./nginx
-    volumes:
-        - ./web:/home/site/web
-        - ./nginx/sites-enabled/site.conf:/etc/nginx/conf.d/default.conf
-        - ./nginx/sites-enabled/php-fpm.conf:/etc/nginx/conf.d/php-fpm.conf
-        - ./nginx/nginx.conf:/etc/nginx/nginx.conf
-        - ./nginx/fastcgi_cache:/etc/nginx/fastcgi_cache
-        - ./nginx/static_files.conf:/etc/nginx/static_files.conf
-    links:
-        - php
+    proxy:
+        build: ./varnish
+        ports:
+            - 8080
+        volumes:
+            - ./varnish/default.vcl:/etc/varnish/default.vcl
+        environment:
+            VARNISH_CONFIG: /etc/varnish/default.vcl
+            CACHE_SIZE: 128m
+            VARNISHD_PARAMS: -p default_ttl=3600 -p default_grace=3600
+            VARNISH_PORT: 8080
+        links:
+            - server
+        networks:
+            - frontend
 
-php:
-    build: ./php
-    volumes:
-        - ./web:/home/site/web
-    links:
-        - database
+    server:
+        build: ./nginx
+        volumes:
+            - ./web:/home/site/web
+            - ./nginx/sites-enabled/site.conf:/etc/nginx/conf.d/default.conf
+            - ./nginx/sites-enabled/php-fpm.conf:/etc/nginx/conf.d/php-fpm.conf
+            - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+            - ./nginx/fastcgi_cache:/etc/nginx/fastcgi_cache
+            - ./nginx/static_files.conf:/etc/nginx/static_files.conf
+        links:
+            - php
+        networks:
+            - frontend
+            - backend
 
-database:
-    build: ./mariadb
-    environment:
-        MYSQL_ROOT_PASSWORD: aden
-        MYSQL_DATABASE: aden
-        MYSQL_USER: aden
-        MYSQL_PASSWORD: aden
+    php:
+        build: ./php
+        volumes:
+            - ./web:/home/site/web
+        links:
+            - database
+        networks:
+            - backend
+
+    database:
+        build: ./mariadb
+        environment:
+            MYSQL_ROOT_PASSWORD: aden
+            MYSQL_DATABASE: aden
+            MYSQL_USER: aden
+            MYSQL_PASSWORD: aden
+        networks:
+            - backend
+
+networks:
+    frontend:
+        driver: bridge
+    backend:
+        driver: bridge
