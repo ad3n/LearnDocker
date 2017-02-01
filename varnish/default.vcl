@@ -81,14 +81,14 @@ sub vcl_recv {
 
     # Only deal with "normal" types
     if (req.method != "GET" &&
-      req.method != "HEAD" &&
-      req.method != "PUT" &&
-      req.method != "POST" &&
-      req.method != "TRACE" &&
-      req.method != "OPTIONS" &&
-      req.method != "PATCH" &&
-      req.method != "DELETE") {
-    /* Non-RFC2616 or CONNECT which is weird. */
+        req.method != "HEAD" &&
+        req.method != "PUT" &&
+        req.method != "POST" &&
+        req.method != "TRACE" &&
+        req.method != "OPTIONS" &&
+        req.method != "PATCH" &&
+        req.method != "DELETE") {
+        # Non-RFC2616 or CONNECT which is weird.
         return (pipe);
     }
 
