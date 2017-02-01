@@ -14,7 +14,7 @@ ENV VCL_CONFIG      /etc/varnish/default.vcl
 ENV CACHE_SIZE      128m
 ENV VARNISHD_PARAMS -p default_ttl=3600 -p default_grace=3600
 
-ADD varnish/start.sh /etc/varnish/start.sh
+ADD start.sh /etc/varnish/start.sh
 
 RUN chmod +x /etc/varnish/start.sh
 
