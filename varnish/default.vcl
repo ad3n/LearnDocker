@@ -5,8 +5,8 @@ import std;
 import directors;
 
 backend server1 { # Define one backend
-    .host = "server"; # IP or Hostname of backend
-    .port = "8888"; # Port Apache or whatever is listening
+    .host = "${BACKEND_HOST}"; # IP or Hostname of backend
+    .port = "${BACKEND_PORT}"; # Port Apache or whatever is listening
     .max_connections = 300; # That's it
 
     .probe = {
@@ -14,7 +14,7 @@ backend server1 { # Define one backend
         # We prefer to only do a HEAD /
         .request =
             "HEAD / HTTP/1.1"
-            "Host: server"
+            "Host: ${BACKEND_HOST}"
             "Connection: close"
             "User-Agent: Varnish Health Probe";
 

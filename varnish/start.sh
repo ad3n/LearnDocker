@@ -1,6 +1,12 @@
 #!/usr/bin/env bash
 set -e
 
+for name in BACKEND_PORT BACKEND_HOST
+do
+    eval value=\$$name
+    sed -i "s|\${${name}}|${value}|g" /etc/varnish/default.vcl
+done
+
 exec bash -c \
     "exec varnishd \
     -a :$VARNISH_PORT \
