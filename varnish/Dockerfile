@@ -2,7 +2,7 @@ FROM debian:latest
 MAINTAINER Muhammad Surya Ihsanuddin<surya.kejawen@gmail.com>
 
 # Set Environment Variables
-RUN DEBIAN_FRONTEND=noninteractive
+ENV DEBIAN_FRONTEND noninteractive
 
 # Install Dependencies
 RUN apt-get update && apt-get install -y apt-utils && apt-get upgrade -y
