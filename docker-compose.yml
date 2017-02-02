@@ -45,6 +45,7 @@ services:
             CACHE_SIZE: 128m
             VARNISHD_PARAMS: -p default_ttl=3600 -p default_grace=3600
             VARNISH_PORT: 8080
+            BACKEND_HOST: server
         links:
             - server
         networks:
