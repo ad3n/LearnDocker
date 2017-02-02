@@ -1,29 +1,23 @@
 version: '2'
 services:
-    balancer:
-        build: ./haproxy
-        ports:
-            - 80:80
-        links:
-            - proxy
-        networks:
-            - frontend
-
-    proxy:
-        build: ./varnish
-        ports:
-            - 8080
-        volumes:
-            - ./varnish/default.vcl:/etc/varnish/default.vcl
+    database:
+        build: ./mariadb
         environment:
-            VARNISH_CONFIG: /etc/varnish/default.vcl
-            CACHE_SIZE: 128m
-            VARNISHD_PARAMS: -p default_ttl=3600 -p default_grace=3600
-            VARNISH_PORT: 8080
-        links:
-            - server
+            MYSQL_ROOT_PASSWORD: aden
+            MYSQL_DATABASE: aden
+            MYSQL_USER: aden
+            MYSQL_PASSWORD: aden
         networks:
-            - frontend
+            - backend
+
+    php:
+        build: ./php
+        volumes:
+            - ./web:/home/site/web
+        links:
+            - database
+        networks:
+            - backend
 
     server:
         build: ./nginx
@@ -40,24 +34,32 @@ services:
             - frontend
             - backend
 
-    php:
-        build: ./php
+    proxy:
+        build: ./varnish
+        expose:
+            - 8080
         volumes:
-            - ./web:/home/site/web
-        links:
-            - database
-        networks:
-            - backend
-
-    database:
-        build: ./mariadb
+            - ./varnish/default.vcl:/etc/varnish/default.vcl
         environment:
-            MYSQL_ROOT_PASSWORD: aden
-            MYSQL_DATABASE: aden
-            MYSQL_USER: aden
-            MYSQL_PASSWORD: aden
+            VARNISH_CONFIG: /etc/varnish/default.vcl
+            CACHE_SIZE: 128m
+            VARNISHD_PARAMS: -p default_ttl=3600 -p default_grace=3600
+            VARNISH_PORT: 8080
+        links:
+            - server
         networks:
-            - backend
+            - frontend
+
+    balancer:
+        build: ./haproxy
+        ports:
+            - 80:80
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+        links:
+            - proxy
+        networks:
+            - frontend
 
 networks:
     frontend:

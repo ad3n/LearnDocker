@@ -20,5 +20,3 @@ ADD start.sh /etc/varnish/start.sh
 RUN chmod +x /etc/varnish/start.sh
 
 CMD ["/etc/varnish/start.sh"]
-
-EXPOSE 80
