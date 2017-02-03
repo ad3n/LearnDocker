@@ -373,7 +373,7 @@ sub vcl_deliver {
     unset resp.http.X-Generator;
     unset resp.http.X-Debug-Token;
     unset resp.http.X-Debug-Token-Link;
-    set resp.http.Server = "Kejawen Server";
+    set resp.http.Server = "${VARNISH_SERVER}";
     set resp.http.X-Powered-By = "MSI<surya.kejawen@gmail.com>";
 
     return (deliver);

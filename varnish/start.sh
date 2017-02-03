@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-for name in BACKEND_PORT BACKEND_HOST
+for name in BACKEND_PORT BACKEND_HOST VARNISH_SERVER
 do
     eval value=\$$name
     sed -i "s|\${${name}}|${value}|g" /etc/varnish/default.vcl
