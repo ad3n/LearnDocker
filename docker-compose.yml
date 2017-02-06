@@ -24,6 +24,7 @@ services:
         volumes:
             - ./web:/home/site/web
         links:
+            - php
             - database
         networks:
             - frontend
