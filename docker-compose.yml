@@ -2,6 +2,9 @@ version: '2'
 services:
     database:
         build: ./mariadb
+        restart: always
+        volumes:
+            - ./../Database:/var/lib/mysql
         environment:
             MYSQL_ROOT_PASSWORD: aden
             MYSQL_DATABASE: aden
@@ -12,6 +15,7 @@ services:
 
     php:
         build: ./php
+        restart: always
         volumes:
             - ./web:/home/site/web
         links:
@@ -21,6 +25,7 @@ services:
 
     server:
         build: ./nginx
+        restart: always
         volumes:
             - ./web:/home/site/web
         links:
@@ -32,6 +37,7 @@ services:
 
     server2:
         build: ./hhvm
+        restart: always
         volumes:
             - ./web:/var/www/public
         links:
@@ -42,6 +48,7 @@ services:
 
     proxy:
         build: ./varnish
+        restart: always
         expose:
             - 8080
         environment:
@@ -59,6 +66,7 @@ services:
 
     proxy2:
         build: ./varnish
+        restart: always
         expose:
             - 8080
         environment:
@@ -76,6 +84,7 @@ services:
 
     balancer:
         build: ./haproxy
+        restart: always
         ports:
             - 80:80
         volumes:
