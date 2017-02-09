@@ -30,6 +30,16 @@ services:
             - frontend
             - backend
 
+    server2:
+        build: ./hhvm
+        volumes:
+            - ./web:/var/www/public
+        links:
+            - database
+        networks:
+            - frontend
+            - backend
+
     proxy:
         build: ./varnish
         expose:
@@ -56,11 +66,11 @@ services:
             CACHE_SIZE: 128m
             VARNISHD_PARAMS: -p default_ttl=3600 -p default_grace=3600
             VARNISH_PORT: 8080
-            BACKEND_HOST: server
+            BACKEND_HOST: server2
             BACKEND_PORT: 8888
             VARNISH_SERVER: SERVER2
         links:
-            - server
+            - server2
         networks:
             - frontend
 
