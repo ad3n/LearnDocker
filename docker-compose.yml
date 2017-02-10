@@ -3,8 +3,8 @@ services:
     database:
         build: ./mariadb
         restart: always
-        volumes:
-            - ./../Database:/var/lib/mysql
+#        volumes: # Set this line if you want to store mysql data outside of Container
+#            - ./../Database:/var/lib/mysql
         environment:
             MYSQL_ROOT_PASSWORD: aden
             MYSQL_DATABASE: aden
